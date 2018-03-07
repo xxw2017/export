@@ -5,10 +5,10 @@ package cn.gzcb.export.model;
  * 2018/3/6
  */
 public class Customer {
-    private String customer_id;//客户id
+    private int customer_id;//客户id
     private String cust_name;//客户名
     private String cust_sex;//性别
-    private String cust_age;//年龄
+    private int cust_age;//年龄
     private String cust_birthday;//出生日期
     private String cust_merry;//婚姻情况
     private String cust_id_type;//证件类型
@@ -40,6 +40,54 @@ public class Customer {
     private String updated_time;//更新时间
     private String update_by;//更新人
 
+    @Override
+    public String toString() {
+        StringBuffer sb=new StringBuffer();
+        sb.append(customer_id+",");
+        sb.append(cust_name+",");
+        sb.append(cust_sex+",");
+        sb.append(cust_age+",");
+        sb.append(cust_birthday+",");
+        sb.append(cust_merry+",");
+        sb.append(cust_id_type+",");
+        sb.append(cust_id_no+",");
+        sb.append(is_manage_owner+",");
+        sb.append(project_code+",");
+        sb.append(special_code+",");
+        sb.append(profession_code+",");
+        sb.append(branch_office+",");
+        sb.append(cust_manager_id+",");
+        sb.append(cust_manager_name+",");
+        sb.append(getCust_manager_grade+",");
+        sb.append(has_children+",");
+        sb.append(census_register+",");
+        sb.append(phone1+",");
+        sb.append(phone2+",");
+        sb.append(pbc_phone+",");
+        sb.append(company_phone1+",");
+        sb.append(company_phone2+",");
+        sb.append(home_phone1+",");
+        sb.append(company_name1+",");
+        sb.append(company_name2+",");
+        sb.append(company_addr1+",");
+        sb.append(company_addr2+",");
+        sb.append(home_addr1+",");
+        sb.append(home_addr2+",");
+        sb.append(created_time+",");
+        sb.append(created_by+",");
+        sb.append(updated_time+",");
+        sb.append(update_by);
+        return sb.toString();
+    }
+
+    public int getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(int customer_id) {
+        this.customer_id = customer_id;
+    }
+
     public String getCust_name() {
         return cust_name;
     }
@@ -56,11 +104,11 @@ public class Customer {
         this.cust_sex = cust_sex;
     }
 
-    public String getCust_age() {
+    public int getCust_age() {
         return cust_age;
     }
 
-    public void setCust_age(String cust_age) {
+    public void setCust_age(int cust_age) {
         this.cust_age = cust_age;
     }
 
@@ -303,4 +351,6 @@ public class Customer {
     public void setUpdate_by(String update_by) {
         this.update_by = update_by;
     }
+
+
 }
