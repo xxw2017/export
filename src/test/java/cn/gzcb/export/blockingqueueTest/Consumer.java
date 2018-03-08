@@ -22,6 +22,7 @@ public class Consumer implements Runnable {
 
     public void run() {
         System.out.println("启动消费者线程！");
+        long start=System.currentTimeMillis();
         boolean isRunning = true;
         try {
             while (isRunning) {
@@ -42,9 +43,12 @@ public class Consumer implements Runnable {
 
                 } else {
                     // 超过2s还没数据，认为所有生产线程都已经退出，自动退出消费线程。
+
                     isRunning = false;
                 }
             }
+            long end=System.currentTimeMillis();
+            System.err.println("用时："+(end-start)/1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
