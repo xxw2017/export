@@ -20,9 +20,9 @@ import java.util.List;
  * @author xiongxianwei
  * 2018/3/7
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
 //@SpringApplicationConfiguration(ExportApplication.class)
-public class SqlTest extends SpringBeanAutowiringSupport {
+public class SqlTest {
 
    /* @Autowired
     private ExportDao exportDao;
@@ -31,7 +31,10 @@ public class SqlTest extends SpringBeanAutowiringSupport {
     @Test
     public void insert(){
         ExportDaoImpl exportDao=new ExportDaoImpl();
+        long start=System.currentTimeMillis();
         exportDao.insertBatchCustomer();
+        long end=System.currentTimeMillis();
+        System.err.println("查询用时："+(end-start)/1000);
     }
 
     @Test
@@ -40,6 +43,6 @@ public class SqlTest extends SpringBeanAutowiringSupport {
         ExportDaoImpl exportDao=new ExportDaoImpl();
         List<Customer> list=exportDao.getCustomerJdbc();
         long end=System.currentTimeMillis();
-        System.err.println((end-start)/1000);
+        System.err.println("查询用时："+(end-start)/1000);
     }
 }

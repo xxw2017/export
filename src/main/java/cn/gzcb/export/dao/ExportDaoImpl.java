@@ -115,7 +115,7 @@ public class ExportDaoImpl implements ExportDao{
             ps= connection.prepareStatement(sql);
             for (int i = 0; i < 10000; i++) {
                 ps.setInt(1, (i + 1));
-                ps.setString(2, "name" + i);
+                ps.setString(2, "testname" + i);
                 ps.setString(3, NumProductUtil.createData(18));
                 ps.setString(4,NumProductUtil.createData(11));
                 ps.setString(5,"广东省广州市天河区天河南二路广州银行");
@@ -123,7 +123,7 @@ public class ExportDaoImpl implements ExportDao{
                 ps.setString(7, TimeUtils.getCurDateFormat());
                 ps.addBatch();
             }
-
+            ps.executeBatch();
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
