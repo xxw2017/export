@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,6 +43,32 @@ public class ExportDaoImpl implements ExportDao{
                 new BeanPropertyRowMapper(Customer.class));
 
         return customers;
+    }
+
+    @Override
+    public List<Customer> getCustomerJdbc() {
+        List<Customer> list=new ArrayList<>();
+        String sql="select * from t_test_customer";
+
+        Connection connection = JdbcUtil.getConnection();
+        try {
+            ps= connection.prepareStatement(sql);
+            rs=ps.executeQuery();
+            while (rs.next()){
+                Customer cust=new Customer();
+                cust.setCustomer_id(rs.getInt("customer_id"));
+                cust.setCust_name(rs.getString("cust_name"));
+                cust.setCust_id_no(rs.getString("cust_id_no"));
+                cust.setPhone1(rs.getString("phone1"));
+                cust.setCompany_addr1(rs.getString("company_addr1"));
+                cust.setCreated_time(rs.getString("created_time"));
+                cust.setUpdated_time(rs.getString("updated_time"));
+                list.add(cust);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -96,7 +123,7 @@ public class ExportDaoImpl implements ExportDao{
                 ps.setString(7, TimeUtils.getCurDateFormat());
                 ps.addBatch();
             }
-            ps.executeBatch();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {

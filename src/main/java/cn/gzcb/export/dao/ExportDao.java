@@ -12,9 +12,15 @@ import java.util.List;
 public interface ExportDao {
 
     /**
-     * 获得所有客户信息
+     * 获得所有客户信息jdbctemplate
      */
     public List<Customer> getCustomer();
+
+    /**
+     * 原生jdbc
+     * @return
+     */
+    public List<Customer> getCustomerJdbc();
 
     /**
      * 批量插入数据
