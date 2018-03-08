@@ -8,10 +8,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Consumer implements Runnable {
 
     private BlockingQueue<String> queue;
+
+    //读写锁保证消费多线程安全
+    private static ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+    public AtomicInteger abc =new AtomicInteger(0);
+
     File file = FileUtils.getFile();
     CsvWriter cw = new CsvWriter(new PrintWriter(file));
 
@@ -21,19 +28,25 @@ public class Consumer implements Runnable {
     }
 
     public void run() {
-        System.out.println("启动消费者线程！");
+        //
+        System.err.println(Thread.currentThread().getName()+"启动消费者线程！");
         long start=System.currentTimeMillis();
         boolean isRunning = true;
         try {
             while (isRunning) {
                 //System.out.println("正从队列获取数据...");
                 String data = queue.poll(2, TimeUnit.SECONDS);
-                System.err.println(data);
+                //System.err.println(data);
                 if (null != data) {
+
+                    int num= abc.incrementAndGet();
+                    System.err.println(Thread.currentThread().getName()+"正在消费第"+num+"条数据");
                     //System.err.println("正在消费数据：" + data);
                     try {
+
                         cw.writeLine(data);
                         cw.flush();
+                        rwl.writeLock().unlock();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -53,7 +66,8 @@ public class Consumer implements Runnable {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         } finally {
-            System.out.println("退出消费者线程！");
+            //rwl.writeLock().unlock();
+            System.err.println(Thread.currentThread().getName()+"退出消费者线程！");
         }
     }
 

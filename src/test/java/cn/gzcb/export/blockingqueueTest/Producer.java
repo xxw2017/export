@@ -16,8 +16,10 @@ public class Producer implements Runnable{
 
     public void run() {
 
-        System.out.println("启动生产者线程！");
+        System.err.println(Thread.currentThread().getName()+"启动生产者线程！");
+        long start=System.currentTimeMillis();
         try {
+
             while (isRunning) {
                 //System.out.println("正在生产数据...");
                 for (int i = 0; i< ExportConstant.MAX_EXPORT_COUNT; i++){
@@ -33,12 +35,14 @@ public class Producer implements Runnable{
                 stop();
                 //data = "data:" + count.incrementAndGet();
                 //System.out.println("将数据：" + customers + "放入队列...");
+                long end=System.currentTimeMillis();
+                System.err.println("生产者用时："+(end-start)/1000);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         } finally {
-            System.out.println("退出生产者线程！");
+            System.err.println(Thread.currentThread().getName()+"退出生产者线程！");
         }
     }
 

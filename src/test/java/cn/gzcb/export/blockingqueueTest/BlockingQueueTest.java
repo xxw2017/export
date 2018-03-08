@@ -13,6 +13,7 @@ public class BlockingQueueTest {
 
 
     public static void main(String[] args) throws InterruptedException, FileNotFoundException {
+        long start=System.currentTimeMillis();
         // 声明一个容量为10的缓存队列
         BlockingQueue<String> queue = new LinkedBlockingQueue<String>(100);
 
@@ -44,7 +45,8 @@ public class BlockingQueueTest {
         //Thread.sleep(2000);
         // 退出Executor
         service.shutdown();
-
+        long end=System.currentTimeMillis();
+        System.err.println("主线程用时："+(end-start)/1000);
     }
 
     /**
