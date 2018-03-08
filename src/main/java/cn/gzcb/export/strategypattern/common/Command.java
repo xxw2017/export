@@ -1,6 +1,7 @@
 package cn.gzcb.export.strategypattern.common;
 
 
+import cn.gzcb.export.strategypattern.Enum.PatternEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

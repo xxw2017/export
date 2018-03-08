@@ -3,8 +3,8 @@ package cn.gzcb.export.dao;
 import cn.gzcb.export.model.Customer;
 import cn.gzcb.export.utils.JdbcUtil;
 import cn.gzcb.export.utils.NumProductUtil;
+import cn.gzcb.export.utils.SpringUtil;
 import cn.gzcb.export.utils.TimeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,12 +23,16 @@ import java.util.List;
  */
 @Repository
 public class ExportDaoImpl implements ExportDao{
-
     /**
      * JdbcTemplate注入实例
      */
     @Resource(name = "jdbcTemplate")
     private JdbcTemplate jdbcTemplate;
+
+    private static SpringUtil springUtil=new SpringUtil();
+    public ExportDaoImpl() {
+        jdbcTemplate = springUtil.getBean(JdbcTemplate.class);
+    }
 
     Connection connection=null;
     PreparedStatement ps=null;
@@ -37,11 +41,12 @@ public class ExportDaoImpl implements ExportDao{
 
     @Override
     public List<Customer> getCustomer() {
+
+
         String sql = "SELECT * FROM t_test_customer";
 
         List<Customer> customers  = jdbcTemplate.query(sql,
                 new BeanPropertyRowMapper(Customer.class));
-
         return customers;
     }
 
