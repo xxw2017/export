@@ -1,4 +1,4 @@
-package cn.gzcb.export.blockingqueueTest;
+package cn.gzcb.export.service;
 
 import cn.gzcb.export.utils.FileUtils;
 
@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Consumer implements Runnable {

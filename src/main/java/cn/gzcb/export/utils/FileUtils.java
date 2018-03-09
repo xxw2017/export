@@ -11,13 +11,14 @@ import java.io.IOException;
  */
 public class FileUtils {
 
-    public static File getFile() {
+    public static File getFile(String name) {
         String path = ExportConstant.FILE_PATH;
-        String filename= ExportConstant.FILENAME;
+        String filename= name+ExportConstant.FILENAME;
 
         File directory = new File(path);
-        if (!directory.exists())
+        if (!directory.exists()) {
             directory.mkdirs();
+        }
         File file = new File(path + filename);
         if (!file.exists()){
             try {

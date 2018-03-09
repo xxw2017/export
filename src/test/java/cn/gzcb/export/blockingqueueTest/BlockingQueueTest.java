@@ -15,7 +15,7 @@ public class BlockingQueueTest {
     public static void main(String[] args) throws InterruptedException, FileNotFoundException {
         long start=System.currentTimeMillis();
         // 声明一个容量为10的缓存队列
-        BlockingQueue<String> queue = new LinkedBlockingQueue<String>(100);
+        LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 
         Producer producer1 = new Producer(queue);
         Consumer consumer1 = new Consumer(queue);

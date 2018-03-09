@@ -351,6 +351,4 @@ public class Customer {
     public void setUpdate_by(String update_by) {
         this.update_by = update_by;
     }
-
-
 }

@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -23,6 +24,9 @@ import java.util.List;
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@SpringApplicationConfiguration(ExportApplication.class)
 public class SqlTest {
+
+    @Resource(name = "jdbcTemplate")
+    private JdbcTemplate jdbcTemplate;
 
    /* @Autowired
     private ExportDao exportDao;
@@ -37,6 +41,17 @@ public class SqlTest {
         System.err.println("查询用时："+(end-start)/1000);
     }
 
+    @Test
+    public void getCustomers(){
+        long start=System.currentTimeMillis();
+        String sql = "SELECT * FROM t_test_customer";
+
+        List<Customer> customers  = jdbcTemplate.query(sql,
+                new BeanPropertyRowMapper(Customer.class));
+
+        long end=System.currentTimeMillis();
+        System.err.println("查询用时："+(end-start)/1000);
+    }
     @Test
     public void getAll(){
         long start=System.currentTimeMillis();
