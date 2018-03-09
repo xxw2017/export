@@ -44,17 +44,52 @@ public class ExportDaoImpl implements ExportDao{
         return customers;
     }
 
+
     @Override
     public List<Customer> getCustomerJdbc(int curPage) {
         List<Customer> list=new ArrayList<>();
-        String sql=
-                "select customer_id,cust_name,cust_id_no,phone1,company_addr1,created_time,updated_time from t_test_customerlimit ?,?";
-
+        StringBuffer sb=new StringBuffer();
+        //
+        sb.append("select customer_id,cust_name,cust_id_no,phone1,company_addr1,created_time,updated_time ");
+        sb.append("from t_test_customer  ");
+        sb.append(" where ?<=customer_id <?");
+        //sb.append("join (SELECT customer_id FROM t_test_customer limit ?,?) b");
+        //sb.append("on a.customer_id=b.customer_id");
+        String sql=sb.toString();
+        System.err.println(sql+" "+(curPage-1)* ExportConstant.PER_THREAD_SIZE+" "+ExportConstant.PER_THREAD_SIZE);
         connection = JdbcUtil.getConnection();
         try {
             ps= connection.prepareStatement(sql);
-            ps.setInt(1,(curPage-1)* ExportConstant.PAGE_SIZE);
-            ps.setInt(2,ExportConstant.PAGE_SIZE);
+            ps.setInt(1,(curPage-1)* ExportConstant.PER_THREAD_SIZE);
+            ps.setInt(2,ExportConstant.PER_THREAD_SIZE);
+            rs=ps.executeQuery();
+            while (rs.next()){
+                Customer cust=new Customer();
+                cust.setCustomer_id(rs.getInt("customer_id"));
+                cust.setCust_name(rs.getString("cust_name"));
+                cust.setCust_id_no(rs.getString("cust_id_no"));
+                cust.setPhone1(rs.getString("phone1"));
+                cust.setCompany_addr1(rs.getString("company_addr1"));
+                cust.setCreated_time(rs.getString("created_time"));
+                cust.setUpdated_time(rs.getString("updated_time"));
+                list.add(cust);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            JdbcUtil.free(rs,ps,connection);
+        }
+        return list;
+    }
+
+    @Override
+    public List<Customer> getAll() {
+        List<Customer> list=new ArrayList<>();
+        String sql="select * from t_test_customer";
+
+        Connection connection = JdbcUtil.getConnection();
+        try {
+            ps= connection.prepareStatement(sql);
             rs=ps.executeQuery();
             while (rs.next()){
                 Customer cust=new Customer();

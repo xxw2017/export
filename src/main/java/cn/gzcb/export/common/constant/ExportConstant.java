@@ -12,9 +12,14 @@ public class ExportConstant {
     public static final int PAGE_SIZE=15;
 
     /**
+     * 每个线程分页查询数量
+     */
+    public static final int PER_THREAD_SIZE=100000;
+
+    /**
      * 最大导出数据量
      */
-    public static final int MAX_EXPORT_COUNT=1000000;
+    public static final int MAX_EXPORT_COUNT=100000;
 
     /**
      * 导出文件路径

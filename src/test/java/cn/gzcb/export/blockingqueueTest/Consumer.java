@@ -40,14 +40,12 @@ public class Consumer implements Runnable {
         try {
             while (isRunning) {
                 //System.out.println("正从队列获取数据...");
-
                 String data = queue.poll(2, TimeUnit.SECONDS);
-                //System.err.println(data);
                 if (null != data) {
                     try {
                         rwl.writeLock().lock();
                         abc +=1;
-                        //System.err.println(Thread.currentThread().getName()+"正在消费第"+abc+"条数据");
+                        System.err.println(Thread.currentThread().getName()+"正在消费第"+abc+"条数据");
                         cw.writeLine(data);
                         cw.flush();
                         rwl.writeLock().unlock();

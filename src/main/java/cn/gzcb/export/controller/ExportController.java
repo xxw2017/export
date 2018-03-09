@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author xiongxianwei
@@ -50,5 +51,14 @@ public class ExportController {
         request.setAttribute("customers",customers);
         return "index";
     }
+
+    @GetMapping(value = "export")
+    @ResponseBody
+    public String export() throws FileNotFoundException {
+        exportService.exportCustomers();
+
+        return "success";
+    }
+
 
 }

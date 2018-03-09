@@ -23,6 +23,7 @@ public interface ExportDao {
      */
     public List<Customer> getCustomerJdbc(int curPage) throws FileNotFoundException;
 
+    public List<Customer> getAll();
     /**
      * 批量插入数据
      */
@@ -32,4 +33,6 @@ public interface ExportDao {
      * 获得客户总数并计算页数
      */
     public int getCustomerCount() throws SQLException;
+
+
 }

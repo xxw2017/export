@@ -1,54 +1,80 @@
 package cn.gzcb.export.service;
 
 import cn.gzcb.export.common.constant.ExportConstant;
+import cn.gzcb.export.dao.ExportDao;
+import cn.gzcb.export.dao.ExportDaoImpl;
 import cn.gzcb.export.model.Customer;
+import cn.gzcb.export.utils.JdbcUtil;
+import org.apache.catalina.core.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+
 public class Producer implements Runnable{
-    private volatile boolean isRunning = true;
-    private BlockingQueue queue;
 
-    public Producer(BlockingQueue queue) {
+
+    Connection connection=null;
+    PreparedStatement ps=null;
+    ResultSet rs=null;
+    private LinkedBlockingQueue queue;
+
+    @Autowired
+    private ExportDao exportDao=new ExportDaoImpl();
+
+    public Producer(LinkedBlockingQueue queue) {
         this.queue = queue;
+        /*WebApplicationContext wac = ContextLoader.getCurrentWebApplicationContext();
+        exportDao=wac.getBean(ExportDaoImpl.class);*/
     }
-
+    @Override
     public void run() {
-
         System.err.println(Thread.currentThread().getName()+"启动生产者线程！");
+        String threadName=Thread.currentThread().getName();
+        String curPage=threadName.substring(threadName.length()-1,threadName.length());
+        int page=Integer.parseInt(curPage)+1;
+
         long start=System.currentTimeMillis();
         try {
-
-            while (isRunning) {
-                //System.out.println("正在生产数据...");
-                for (int i = 0; i< ExportConstant.MAX_EXPORT_COUNT; i++){
-                    Customer customer = new Customer();
-                    customer.setCustomer_id(i);
-                    customer.setCust_age(18);
-                    customer.setCust_name("name " +i);
-                    customer.setCust_sex(i%2==0 ?"boy":"girl");
-                    if (!queue.offer(customer.toString(), 2, TimeUnit.SECONDS)) {
-                        System.err.println("放入数据失败：" + customer.toString());
+            List<Customer> customers=exportDao.getCustomerJdbc(page);
+            if(customers!=null){
+                for(int i=0;i<customers.size();i++) {
+                    if (!queue.offer(customers.get(i).toString(), 2, TimeUnit.SECONDS)) {
+                        System.err.println("放入数据失败：" + customers.get(i).toString());
                     }
                 }
-                stop();
-                //data = "data:" + count.incrementAndGet();
-                //System.out.println("将数据：" + customers + "放入队列...");
-                long end=System.currentTimeMillis();
-                System.err.println("生产者用时："+(end-start)/1000);
+            }else{
+                System.err.println("生产者获取数据失败！");
             }
-        } catch (InterruptedException e) {
+
+            long end=System.currentTimeMillis();
+            System.err.println("生产者用时："+(end-start)/1000);
+        } catch (Exception e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         } finally {
             System.err.println(Thread.currentThread().getName()+"退出生产者线程！");
         }
     }
-
+/*
     public void stop() {
         isRunning = false;
-    }
+    }*/
+
 
 
 }

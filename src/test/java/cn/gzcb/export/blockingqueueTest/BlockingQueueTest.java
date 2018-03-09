@@ -1,13 +1,11 @@
 package cn.gzcb.export.blockingqueueTest;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.util.Random;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 
 public class BlockingQueueTest {
 
@@ -17,15 +15,28 @@ public class BlockingQueueTest {
         // 声明一个容量为10的缓存队列
         LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 
+
+
+        // 借助Executors
+        //ExecutorService service = Executors.newCachedThreadPool();
+        LinkedBlockingQueue<Runnable> threadQueue = new LinkedBlockingQueue<>(10);
+        ThreadFactory nameThread=new ThreadFactoryBuilder().setNameFormat("pool-%d").build();
+        // 借助Executors
+        ExecutorService service = new ThreadPoolExecutor(
+                10,
+                100,
+                100L,
+                TimeUnit.SECONDS,
+                threadQueue,
+                nameThread
+        );
+
         Producer producer1 = new Producer(queue);
         Consumer consumer1 = new Consumer(queue);
         //Producer producer2 = new Producer(queue);
         //Producer producer3 = new Producer(queue);
         Consumer consumer2 = new Consumer(queue);
         Consumer consumer3 = new Consumer(queue);
-
-        // 借助Executors
-        ExecutorService service = Executors.newCachedThreadPool();
         // 启动线程
         service.execute(producer1);
         //service.execute(producer2);
