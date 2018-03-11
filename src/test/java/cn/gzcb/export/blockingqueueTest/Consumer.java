@@ -15,28 +15,18 @@ public class Consumer implements Runnable {
 
     private BlockingQueue<String> queue;
 
+    private BlockingQueue<CsvWriter> csvWriterQueue;
+
     //读写锁保证消费多线程安全
     private static ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
     public static int abc=0;
-    private static File file = FileUtils.getFile();
-    private static CsvWriter cw = null;
-    static {
-        if(cw==null){
-            try {
-                cw=new  CsvWriter(new PrintWriter(file));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
-    public Consumer(BlockingQueue<String> queue) throws FileNotFoundException {
+    public Consumer(BlockingQueue<String> queue,BlockingQueue<CsvWriter> csvWriterQueue) throws FileNotFoundException {
         this.queue = queue;
+        this.csvWriterQueue=csvWriterQueue;
     }
 
     public void run() {
-        //
-
         System.err.println(Thread.currentThread().getName()+"启动消费者线程！");
         long start=System.currentTimeMillis();
         boolean isRunning = true;
@@ -48,11 +38,14 @@ public class Consumer implements Runnable {
                 //System.err.println(data);
                 if (null != data) {
                     try {
-                        rwl.writeLock().lock();
                         abc +=1;
+                        rwl.writeLock().lock();
+
                         System.err.println(Thread.currentThread().getName()+"正在消费第"+abc+"条数据");
-                        cw.writeLine(data);
-                        cw.flush();
+                        CsvWriter ce=csvWriterQueue.take();
+                        ce.writeLine(data);
+                        ce.flush();
+                        csvWriterQueue.put(ce);
                         rwl.writeLock().unlock();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -62,7 +55,7 @@ public class Consumer implements Runnable {
                     isRunning = false;
                 }
             }
-
+            System.out.println(abc+"11111111111");
             long end=System.currentTimeMillis();
             System.err.println("用时："+(end-start)/1000);
         } catch (InterruptedException e) {

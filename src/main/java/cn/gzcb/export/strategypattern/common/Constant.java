@@ -37,5 +37,9 @@ public class Constant {
     /*生产随机数长度（length：6）*/
     public final static String RANDOM_LENGTH="RH";
 
+    /*加密方式*/
     public final static String ENCRYPTION="EN";
+
+    /*StringTypeEnum  枚举*/
+    public final static String STRINGTYPE="SE";
 }

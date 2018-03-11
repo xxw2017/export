@@ -11,10 +11,8 @@ import java.io.IOException;
  */
 public class FileUtils {
 
-    public static File getFile() {
+    public static File getFile(String filename) {
         String path = ExportConstant.FILE_PATH;
-        String filename= ExportConstant.FILENAME;
-
         File directory = new File(path);
         if (!directory.exists())
             directory.mkdirs();

@@ -26,7 +26,8 @@ public class Util {
     * 返回手机号码
     */
     private static String[] telFirst="134,135,136,137,138,139,150,151,152,157,158,159,130,131,132,155,156,133,153".split(",");
-    private static String getTel() {
+
+    public static String getTel() {
        int index = getNum(0, telFirst.length - 1);
        String first = telFirst[index];
        String second = String.valueOf(getNum(1, 888) + 10000).substring(1);
@@ -39,15 +40,33 @@ public class Util {
      * @param count 随机数个数
      * @return
      */
-    public static String game(int count){
+    public static String getNumberStringByLength(int count){
         StringBuffer sb = new StringBuffer();
-        String str = "0123456789";
+        String str = new String("0123456789");
         Random r = new Random();
+        int length=str.length()-1;
         for(int i=0;i<count;i++){
-            int num = r.nextInt(str.length());
+            System.out.println(length);
+            int num = r.nextInt(length);
             sb.append(str.charAt(num));
-            str = str.replace((str.charAt(num)+""), "");
         }
+        return sb.toString();
+    }
+
+    public static String getAStringByLength(int length){
+        //定义一个字符串（A-Z，a-z，0-9）即62位；
+        String str="zxcvbnmlkjhgfdsaqwertyuiopQWERTYUIOPASDFGHJKLZXCVBNM1234567890";
+        //由Random生成随机数
+        Random random=new Random();
+        StringBuffer sb=new StringBuffer();
+        //长度为几就循环几次
+        for(int i=0; i<length; ++i){
+            //产生0-61的数字
+            int number=random.nextInt(62);
+            //将产生的数字通过length次承载到sb中
+            sb.append(str.charAt(number));
+        }
+        //将承载的字符转换成字符串
         return sb.toString();
     }
 }

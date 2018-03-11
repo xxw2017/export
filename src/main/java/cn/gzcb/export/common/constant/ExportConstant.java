@@ -9,7 +9,7 @@ public class ExportConstant {
     /**
      * 最大导出数据量
      */
-    public static final int MAX_EXPORT_COUNT=10000;
+    public static final int MAX_EXPORT_COUNT=100000;
 
     /**
      * 导出文件路径

@@ -23,15 +23,15 @@ import java.util.List;
  */
 @Repository
 public class ExportDaoImpl implements ExportDao{
-    /**
-     * JdbcTemplate注入实例
-     */
-    @Resource(name = "jdbcTemplate")
-    private JdbcTemplate jdbcTemplate;
-
-    private static SpringUtil springUtil=new SpringUtil();
+//    /**
+//     * JdbcTemplate注入实例
+//     */
+//    @Resource(name = "jdbcTemplate")
+//    private JdbcTemplate jdbcTemplate;
+//
+//    private static SpringUtil springUtil=new SpringUtil();
     public ExportDaoImpl() {
-        jdbcTemplate = springUtil.getBean(JdbcTemplate.class);
+//        jdbcTemplate = springUtil.getBean(JdbcTemplate.class);
     }
 
     Connection connection=null;
@@ -43,11 +43,11 @@ public class ExportDaoImpl implements ExportDao{
     public List<Customer> getCustomer() {
 
 
-        String sql = "SELECT * FROM t_test_customer";
-
-        List<Customer> customers  = jdbcTemplate.query(sql,
-                new BeanPropertyRowMapper(Customer.class));
-        return customers;
+//        String sql = "SELECT * FROM t_test_customer";
+//
+//        List<Customer> customers  = jdbcTemplate.query(sql,
+//                new BeanPropertyRowMapper(Customer.class));
+        return null;
     }
 
     @Override
