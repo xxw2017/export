@@ -7,6 +7,16 @@ package cn.gzcb.export.common.constant;
 public class ExportConstant {
 
     /**
+     * 每页显示数
+     */
+    public static final int PAGE_SIZE=15;
+
+    /**
+     * 每个线程分页查询数量
+     */
+    public static final int PER_THREAD_SIZE=100000;
+
+    /**
      * 最大导出数据量
      */
     public static final int MAX_EXPORT_COUNT=100000;
@@ -14,12 +24,12 @@ public class ExportConstant {
     /**
      * 导出文件路径
      */
-    public static final String FILE_PATH="C:\\test\\";
+    public static final String FILE_PATH="D:\\test\\";
 
     /**
      * 导出文件名
      */
-    public static final String FILENAME="abc.csv";
+    public static final String FILENAME=".csv";
 
     /**
      * jdbc连接数据库连接

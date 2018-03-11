@@ -8,7 +8,7 @@ public class Customer {
     private int customer_id;//客户id
     private String cust_name;//客户名
     private String cust_sex;//性别
-    private int cust_age;//年龄
+    private Integer cust_age;//年龄
     private String cust_birthday;//出生日期
     private String cust_merry;//婚姻情况
     private String cust_id_type;//证件类型
@@ -104,11 +104,11 @@ public class Customer {
         this.cust_sex = cust_sex;
     }
 
-    public int getCust_age() {
+    public Integer getCust_age() {
         return cust_age;
     }
 
-    public void setCust_age(int cust_age) {
+    public void setCust_age(Integer cust_age) {
         this.cust_age = cust_age;
     }
 
@@ -351,6 +351,4 @@ public class Customer {
     public void setUpdate_by(String update_by) {
         this.update_by = update_by;
     }
-
-
 }

@@ -97,7 +97,7 @@ public class DruidDbConfig {
         return datasource;
     }
 
-    @Bean
+    @Bean(name = "jdbcTemplate")
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSource());
     }

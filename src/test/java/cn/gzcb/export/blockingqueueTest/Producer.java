@@ -2,11 +2,16 @@ package cn.gzcb.export.blockingqueueTest;
 
 import cn.gzcb.export.common.constant.ExportConstant;
 import cn.gzcb.export.model.Customer;
+import cn.gzcb.export.utils.JdbcUtil;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class Producer implements Runnable{
+
     private volatile boolean isRunning = true;
     private BlockingQueue queue;
     private BlockingQueue<CsvWriter> csvWriterQueue;

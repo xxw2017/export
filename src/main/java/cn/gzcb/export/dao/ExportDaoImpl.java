@@ -1,5 +1,6 @@
 package cn.gzcb.export.dao;
 
+import cn.gzcb.export.common.constant.ExportConstant;
 import cn.gzcb.export.model.Customer;
 import cn.gzcb.export.utils.JdbcUtil;
 import cn.gzcb.export.utils.NumProductUtil;
@@ -23,16 +24,11 @@ import java.util.List;
  */
 @Repository
 public class ExportDaoImpl implements ExportDao{
-//    /**
-//     * JdbcTemplate注入实例
-//     */
-//    @Resource(name = "jdbcTemplate")
-//    private JdbcTemplate jdbcTemplate;
-//
-//    private static SpringUtil springUtil=new SpringUtil();
-    public ExportDaoImpl() {
-//        jdbcTemplate = springUtil.getBean(JdbcTemplate.class);
-    }
+    /**
+     * JdbcTemplate注入实例
+     */
+    @Resource(name = "jdbcTemplate")
+    private JdbcTemplate jdbcTemplate;
 
     Connection connection=null;
     PreparedStatement ps=null;
@@ -41,17 +37,53 @@ public class ExportDaoImpl implements ExportDao{
 
     @Override
     public List<Customer> getCustomer() {
+        String sql = "SELECT * FROM t_test_customer";
+
+        List<Customer> customers  = jdbcTemplate.query(sql,
+                new BeanPropertyRowMapper(Customer.class));
+        return customers;
+    }
 
 
-//        String sql = "SELECT * FROM t_test_customer";
-//
-//        List<Customer> customers  = jdbcTemplate.query(sql,
-//                new BeanPropertyRowMapper(Customer.class));
-        return null;
+    @Override
+    public List<Customer> getCustomerJdbc(int curPage) {
+        List<Customer> list=new ArrayList<>();
+        StringBuffer sb=new StringBuffer();
+        //
+        sb.append("select customer_id,cust_name,cust_id_no,phone1,company_addr1,created_time,updated_time ");
+        sb.append("from t_test_customer  ");
+        sb.append(" where ?<=customer_id <?");
+        //sb.append("join (SELECT customer_id FROM t_test_customer limit ?,?) b");
+        //sb.append("on a.customer_id=b.customer_id");
+        String sql=sb.toString();
+        System.err.println(sql+" "+(curPage-1)* ExportConstant.PER_THREAD_SIZE+" "+ExportConstant.PER_THREAD_SIZE);
+        connection = JdbcUtil.getConnection();
+        try {
+            ps= connection.prepareStatement(sql);
+            ps.setInt(1,(curPage-1)* ExportConstant.PER_THREAD_SIZE);
+            ps.setInt(2,ExportConstant.PER_THREAD_SIZE);
+            rs=ps.executeQuery();
+            while (rs.next()){
+                Customer cust=new Customer();
+                cust.setCustomer_id(rs.getInt("customer_id"));
+                cust.setCust_name(rs.getString("cust_name"));
+                cust.setCust_id_no(rs.getString("cust_id_no"));
+                cust.setPhone1(rs.getString("phone1"));
+                cust.setCompany_addr1(rs.getString("company_addr1"));
+                cust.setCreated_time(rs.getString("created_time"));
+                cust.setUpdated_time(rs.getString("updated_time"));
+                list.add(cust);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            JdbcUtil.free(rs,ps,connection);
+        }
+        return list;
     }
 
     @Override
-    public List<Customer> getCustomerJdbc() {
+    public List<Customer> getAll() {
         List<Customer> list=new ArrayList<>();
         String sql="select * from t_test_customer";
 
@@ -72,13 +104,14 @@ public class ExportDaoImpl implements ExportDao{
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            JdbcUtil.free(rs,ps,connection);
         }
-        return null;
+        return list;
     }
 
     @Override
     public void insertBatchCustomer() {
-
         try {
             StringBuffer sb=new StringBuffer();
             sb.append("customer_id,");
@@ -116,9 +149,9 @@ public class ExportDaoImpl implements ExportDao{
             sb.append("updated_time");
             //sb.append("update_by)");
             String sql ="insert into t_test_customer("+sb.toString()+") values(?,?,?,?,?,?,?)";
-            Connection connection = JdbcUtil.getConnection();
+            connection = JdbcUtil.getConnection();
             ps= connection.prepareStatement(sql);
-            for (int i = 0; i < 10000; i++) {
+            for (int i = 10000; i < 1000000; i++) {
                 ps.setInt(1, (i + 1));
                 ps.setString(2, "testname" + i);
                 ps.setString(3, NumProductUtil.createData(18));
@@ -134,6 +167,25 @@ public class ExportDaoImpl implements ExportDao{
         }finally {
             JdbcUtil.free(null,ps,connection);
         }
+    }
 
+    @Override
+    public int getCustomerCount(){
+        int count=0;
+        String sql="SELECT count(customer_id) FROM t_test_customer";
+        connection=JdbcUtil.getConnection();
+        try {
+            ps=connection.prepareStatement(sql);
+
+            rs=ps.executeQuery();
+            while (rs.next()){
+                count=rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            JdbcUtil.free(rs,ps,connection);
+        }
+        return count;
     }
 }
