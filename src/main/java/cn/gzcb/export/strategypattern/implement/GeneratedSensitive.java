@@ -31,7 +31,10 @@ public class GeneratedSensitive implements Strategy {
     @Override
     public String removeSensitive(String importation) throws InputIllegalException, ParametersIllegalException {
         //获得随机字符串类型 （IDNO,手机号，纯数字等）
-        StringTypeEnum outStringType=(StringTypeEnum)command.getMap().get(Constant.STRINGTYPE);
+        StringTypeEnum outStringType=StringTypeEnum.PURE_ALPHABET;
+        if ((command.getMap().get(Constant.STRINGTYPE))!=null){
+            outStringType=StringTypeEnum.valueOf((String)command.getMap().get(Constant.STRINGTYPE));
+        }
         //获取输出字符串长度指令
         int stringLength=command.getMap().get(Constant.RANDOM_LENGTH)==null?0:(int)command.getMap().get(Constant.RANDOM_LENGTH);
         switch (outStringType){

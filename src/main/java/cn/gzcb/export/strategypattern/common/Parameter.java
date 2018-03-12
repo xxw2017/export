@@ -20,5 +20,7 @@ public class Parameter {
     private int RH;
     /*替换为*/
     private String RE;
+    /*返回的字符串类型*/
+    private String RT;
 
 }
