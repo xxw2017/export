@@ -38,8 +38,8 @@ public class Consumer implements Runnable {
             cw = new CsvWriter(new PrintWriter(file));
             while (isRunning) {
                 //System.out.println("正从队列获取数据...");
-
-                String data = queue.poll(100, TimeUnit.SECONDS);
+                //String data=queue.take();
+                String data = queue.poll(10, TimeUnit.SECONDS);
                 //System.err.println(data);
                 if (null != data) {
                     try {

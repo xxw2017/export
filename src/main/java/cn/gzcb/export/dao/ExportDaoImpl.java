@@ -8,6 +8,7 @@ import cn.gzcb.export.utils.SpringUtil;
 import cn.gzcb.export.utils.TimeUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
@@ -22,7 +23,7 @@ import java.util.List;
  * @author xiongxianwei
  * 2018/3/7
  */
-@Repository
+@Component
 public class ExportDaoImpl implements ExportDao{
     /**
      * JdbcTemplate注入实例
@@ -49,20 +50,21 @@ public class ExportDaoImpl implements ExportDao{
     public List<Customer> getCustomerJdbc(int curPage) {
         List<Customer> list=new ArrayList<>();
         StringBuffer sb=new StringBuffer();
-        //
         sb.append("select customer_id,cust_name,cust_id_no,phone1,company_addr1,created_time,updated_time ");
         sb.append("from t_test_customer  ");
-        sb.append(" where ?<=customer_id <?");
+        sb.append(" where customer_id >= ? and customer_id < ?");
         //sb.append("join (SELECT customer_id FROM t_test_customer limit ?,?) b");
         //sb.append("on a.customer_id=b.customer_id");
         String sql=sb.toString();
-        System.err.println(sql+" "+(curPage-1)* ExportConstant.PER_THREAD_SIZE+" "+ExportConstant.PER_THREAD_SIZE);
+        System.err.println("当前线程"+curPage);
+        System.err.println(sql+" "+(curPage)* ExportConstant.PER_THREAD_SIZE+" "+(curPage+1)*ExportConstant.PER_THREAD_SIZE);
         connection = JdbcUtil.getConnection();
         try {
             ps= connection.prepareStatement(sql);
-            ps.setInt(1,(curPage-1)* ExportConstant.PER_THREAD_SIZE);
-            ps.setInt(2,ExportConstant.PER_THREAD_SIZE);
+            ps.setInt(1,(curPage)* ExportConstant.PER_THREAD_SIZE);
+            ps.setInt(2,(curPage+1)*ExportConstant.PER_THREAD_SIZE);
             rs=ps.executeQuery();
+            System.err.println("结果集："+rs);
             while (rs.next()){
                 Customer cust=new Customer();
                 cust.setCustomer_id(rs.getInt("customer_id"));
@@ -77,7 +79,7 @@ public class ExportDaoImpl implements ExportDao{
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            JdbcUtil.free(rs,ps,connection);
+            //JdbcUtil.free(rs,ps,connection);
         }
         return list;
     }

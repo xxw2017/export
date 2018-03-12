@@ -14,7 +14,7 @@ public class ExportConstant {
     /**
      * 每个线程分页查询数量
      */
-    public static final int PER_THREAD_SIZE=100000;
+    public static final int PER_THREAD_SIZE=500000;
 
     /**
      * 最大导出数据量

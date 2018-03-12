@@ -54,7 +54,7 @@ public class ExportController {
 
     @GetMapping(value = "export")
     @ResponseBody
-    public String export() throws FileNotFoundException {
+    public String export() throws FileNotFoundException, InterruptedException {
         exportService.exportCustomers();
 
         return "success";

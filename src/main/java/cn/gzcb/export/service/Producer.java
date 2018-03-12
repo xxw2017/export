@@ -33,30 +33,33 @@ public class Producer implements Runnable{
     ResultSet rs=null;
     private LinkedBlockingQueue queue;
 
-    @Autowired
-    private ExportDao exportDao=new ExportDaoImpl();
+
 
     public Producer(LinkedBlockingQueue queue) {
         this.queue = queue;
-        /*WebApplicationContext wac = ContextLoader.getCurrentWebApplicationContext();
-        exportDao=wac.getBean(ExportDaoImpl.class);*/
     }
     @Override
     public void run() {
+        int abc=0;
         System.err.println(Thread.currentThread().getName()+"启动生产者线程！");
+        ExportDao exportDao=new ExportDaoImpl();
         String threadName=Thread.currentThread().getName();
         String curPage=threadName.substring(threadName.length()-1,threadName.length());
-        int page=Integer.parseInt(curPage)+1;
+        int page=Integer.parseInt(curPage);
 
         long start=System.currentTimeMillis();
         try {
             List<Customer> customers=exportDao.getCustomerJdbc(page);
             if(customers!=null){
                 for(int i=0;i<customers.size();i++) {
+                    abc++;
+
                     if (!queue.offer(customers.get(i).toString(), 2, TimeUnit.SECONDS)) {
                         System.err.println("放入数据失败：" + customers.get(i).toString());
                     }
                 }
+                System.err.println(Thread.currentThread().getName()+"生产了"+abc+"条数据！");
+                Thread.currentThread().interrupt();
             }else{
                 System.err.println("生产者获取数据失败！");
             }

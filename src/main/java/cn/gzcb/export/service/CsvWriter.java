@@ -28,15 +28,6 @@ public class CsvWriter extends BufferedWriter {
      * @throws IOException IOException
      */
     public void writeLine(final String csvLine) throws IOException {
-        //StringBuffer sb = new StringBuffer();
-        /*for (int i = 0; i < csvLine.length(); i++) {
-            String line = Character.toString(csvLine.charAt(i));
-            if (line == null) {
-                line = "";
-            }
-            sb.append("\"").append(line.replaceAll("\"", "\"\"")).append("\",");
-        }*/
-
         super.write(csvLine);
         super.newLine();
     }

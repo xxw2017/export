@@ -32,5 +32,5 @@ public interface ExportService {
      */
     public void insertBatchCustomer() throws SQLException;
 
-    public void exportCustomers() throws FileNotFoundException;
+    public void exportCustomers() throws FileNotFoundException, InterruptedException;
 }
