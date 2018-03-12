@@ -11,6 +11,9 @@
     tr td{
         width: 33.3333%;
     }
+    .red_border{
+        border: 1px solid red;
+    }
 </style>
 <body style="margin: 2%">
 <div class="jumbotron" style="padding: 20px 10px;">
@@ -21,101 +24,16 @@
 
 <div>
     <form id="form1">
+        <button class="btn btn-primary" type="button" onclick="addRow()">添加行</button>
+        <button class="btn btn-danger" type="button" onclick="minusRow()">删除行</button>
         <table class="table">
             <thead>
-                <th>属性名</th>
+                <th>数据库字段名</th>
                 <th>加密方式</th>
                 <th>加密规则</th>
             </thead>
             <tbody>
 
-                <tr>
-                    <td style="width: 10%;">
-                        姓名
-                        <input name="TypeName" value="UserName" type="hidden" />
-                    </td>
-                    <td style="width: 10%;">
-                        <select name="PatternEnum" class="form-control">
-                            <option value="">请选择</option>
-                            <option value="Hidden_Characters">隐藏字段</option>
-                            <option value="Generated_Randomly">随机生成</option>
-                        </select>
-                    </td>
-                    <td style="width: 80%;">
-                        <div class="form-inline">
-                            <input name="CL"  class="form-control" type="number" placeholder="隐藏长度"/>
-                            <input name="OT" class="form-control" type="number" placeholder="偏移量"/>
-                            <input name="RH" class="form-control" type="number" placeholder="随机长度"/>
-                            <input name="RE" class="form-control" type="text" placeholder="替换为"/>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td style="width: 10%;">
-                        电话
-                        <input name="TypeName" value="Tel" type="hidden" />
-                    </td>
-                    <td style="width: 10%;">
-                        <select name="PatternEnum" class="form-control">
-                            <option value="">请选择</option>
-                            <option value="Hidden_Characters">隐藏字段</option>
-                            <option value="Generated_Randomly">随机生成</option>
-                        </select>
-                    </td>
-                    <td style="width: 80%;">
-                        <div class="form-inline">
-                            <input name="CL"  class="form-control" type="number" placeholder="隐藏长度"/>
-                            <input name="OT" class="form-control" type="number" placeholder="偏移量"/>
-                            <input name="RH" class="form-control" type="number" placeholder="随机长度"/>
-                            <input name="RE" class="form-control" type="text" placeholder="替换为"/>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td style="width: 10%;">
-                        身份证号
-                        <input name="TypeName" value="IDCard" type="hidden" />
-                    </td>
-                    <td style="width: 10%;">
-                        <select name="PatternEnum" class="form-control">
-                            <option value="">请选择</option>
-                            <option value="Hidden_Characters">隐藏字段</option>
-                            <option value="Generated_Randomly">随机生成</option>
-                        </select>
-                    </td>
-                    <td style="width: 80%;">
-                        <div class="form-inline">
-                            <input name="CL"  class="form-control" type="number" placeholder="隐藏长度"/>
-                            <input name="OT" class="form-control" type="number" placeholder="偏移量"/>
-                            <input name="RH" class="form-control" type="number" placeholder="随机长度"/>
-                            <input name="RE" class="form-control" type="text" placeholder="替换为"/>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td style="width: 10%;">
-                        家庭住址
-                        <input name="TypeName" value="Address" type="hidden" />
-                    </td>
-                    <td style="width: 10%;">
-                        <select name="PatternEnum" class="form-control">
-                            <option value="">请选择</option>
-                            <option value="Hidden_Characters">隐藏字段</option>
-                            <option value="Generated_Randomly">随机生成</option>
-                        </select>
-                    </td>
-                    <td style="width: 80%;">
-                        <div class="form-inline">
-                            <input name="CL"  class="form-control" type="number" placeholder="隐藏长度"/>
-                            <input name="OT" class="form-control" type="number" placeholder="偏移量"/>
-                            <input name="RH" class="form-control" type="number" placeholder="随机长度"/>
-                            <input name="RE" class="form-control" type="text" placeholder="替换为"/>
-                        </div>
-                    </td>
-                </tr>
             </tbody>
         </table>
     </form>
@@ -125,15 +43,7 @@
 </div>
 <script>
     $(function () {
-        $("select[name='PatternEnum']").change(function () {
-            //alert();
-            var Type=$(this).val();
-            switch (Type) {
-                case "Hidden_Characters":displayInput(this,"CL,OT,RE");break;
-                case "Generated_Randomly":displayInput(this,"RH");break;
-                default : break;
-            }
-        });
+        addRow();
     });
     function displayInput(curselect,names) {
         var names=names.split(",");
@@ -142,16 +52,36 @@
         $(inputlist).each(function (n,obj) {
             var input=$(obj);
             if(names.indexOf(input.attr("name"))>-1){
-                input.show();
+                if(input.attr("name")!="TypeName"){
+                    input.show();
+                }
             }else{
-                input.val("");
-                input.hide();
+                if(input.attr("name")!="TypeName"){
+                    input.val("");
+                    input.hide();
+
+                }
             }
         });
     }
 
     /*提交表单参数*/
     function ComandSubmit() {
+        //检测未输入文本框
+        var inputlist=$("input:visible");
+        var no_input_count=0;
+        $.each(inputlist,function (n,obj) {
+            if($(obj).val()==""){
+                $(obj).addClass("red_border");
+                no_input_count+=1;
+            }else{
+                $(obj).removeClass("red_border");
+            }
+        });
+        if(no_input_count>0){
+            alert("你有未输入的文本框，请按要求输入");
+            return false;
+        }
 
         var TypeNameList=$("input[name='TypeName']");
         var PatternEnumList=$("select[name='PatternEnum']");
@@ -159,13 +89,16 @@
         var OTList=$("input[name='OT']");
         var RHList=$("input[name='RH']");
         var REList=$("input[name='RE']");
-        alert(PatternEnumList.length);
 
         var list = new Array();
         for(var i=0;i<TypeNameList.length;i++){
             var conm=new Object();
             conm.TypeName=$(TypeNameList[i]).val();
             conm.PatternEnum=$(PatternEnumList[i]).val();
+            if(conm.PatternEnum==""){
+                alert("第"+(i+1)+"条命令请选择加密方式");
+                return false;
+            }
             conm.CL=$(CLList[i]).val();
             conm.OT=$(OTList[i]).val();
             conm.RH=$(RHList[i]).val();
@@ -174,7 +107,7 @@
         }
 
         $.ajax({
-            url:"/uuu/ssss",
+            url:"/export/domain",
             type: "POST",
             data:JSON.stringify(list),
             dataType:"JSON",
@@ -185,6 +118,51 @@
             }
         });
     }
+
+
+    /*添加行*/
+    function addRow(){
+        var htmlString='                <tr>\n' +
+            '                    <td style="width: 10%;">\n' +
+            '                        <input name="TypeName" class="form-control" value="" type="text" />\n' +
+            '                    </td>\n' +
+            '                    <td style="width: 10%;">\n' +
+            '                        <select name="PatternEnum" class="form-control">\n' +
+            '                            <option value="">请选择</option>\n' +
+            '                            <option value="Hidden_Characters">隐藏字段</option>\n' +
+            '                            <option value="Generated_Randomly">随机生成</option>\n' +
+            '                        </select>\n' +
+            '                    </td>\n' +
+            '                    <td style="width: 75%;">\n' +
+            '                        <div class="form-inline">\n' +
+            '                            <input name="CL"  class="form-control" type="number" placeholder="隐藏长度"/>\n' +
+            '                            <input name="OT" class="form-control" type="number" placeholder="偏移量"/>\n' +
+            '                            <input name="RH" class="form-control" type="number" placeholder="随机长度"/>\n' +
+            '                            <input name="RE" class="form-control" type="text" placeholder="替换为"/>\n' +
+            '                        </div>\n' +
+            '                    </td>\n' +
+            '                </tr>';
+        $(".table tbody").append(htmlString);
+        $("select[name='PatternEnum']").change(function () {
+            //alert();
+            var Type=$(this).val();
+            switch (Type) {
+                case "Hidden_Characters":displayInput(this,"CL,OT,RE");break;
+                case "Generated_Randomly":displayInput(this,"RH");break;
+                default : break;
+            }
+        });
+    }
+
+    function minusRow() {
+        var rows = $(".table tbody tr");
+        if(rows.length<=1){
+            alert("不能再少了");
+        }else{
+            $(rows[rows.length-1]).remove();
+        }
+    }
+
 </script>
 </body>
 </html>
