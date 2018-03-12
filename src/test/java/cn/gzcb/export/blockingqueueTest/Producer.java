@@ -14,6 +14,7 @@ public class Producer implements Runnable{
 
     private volatile boolean isRunning = true;
     private BlockingQueue queue;
+    private BlockingQueue<CsvWriter> csvWriterQueue;
 
     public Producer(BlockingQueue queue) {
         this.queue = queue;
@@ -33,9 +34,7 @@ public class Producer implements Runnable{
                     customer.setCust_age(18);
                     customer.setCust_name("name " +i);
                     customer.setCust_sex(i%2==0 ?"boy":"girl");
-                    if (!queue.offer(customer.toString(), 2, TimeUnit.SECONDS)) {
-                        System.err.println("放入数据失败：" + customer.toString());
-                    }
+                    queue.put(customer.toString());
                 }
                 stop();
                 //data = "data:" + count.incrementAndGet();

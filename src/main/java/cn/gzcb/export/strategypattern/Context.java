@@ -13,6 +13,6 @@ public class Context {
     }
 
     public String executeStrategy(String importation, Command command) throws ParametersIllegalException, InputIllegalException {
-        return strategy.removeSensitive(importation, command);
+        return strategy.removeSensitive(importation);
     }
 }
