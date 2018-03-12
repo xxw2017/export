@@ -78,7 +78,11 @@
             <artifactId>guava</artifactId>
             <version>23.6-jre</version>
         </dependency>
-
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.15</version>
+		</dependency>
 
 	</dependencies>
 

@@ -31,6 +31,17 @@ public class ExportConstant {
      */
     public static final String FILENAME=".csv";
 
+
+    /**
+     * 生产者线程数
+     */
+    public static final int PRODUCER_THREAD_SIZE=2;
+
+    /**
+     * 消费者线程数
+     */
+    public static final int CONSUMER_THREAD_SIZE=3;
+
     /**
      * jdbc连接数据库连接
      */

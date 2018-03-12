@@ -1,10 +1,17 @@
 package cn.gzcb.export.model;
 
+import cn.gzcb.export.strategypattern.exception.InputIllegalException;
+import cn.gzcb.export.strategypattern.exception.ParametersIllegalException;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  * @author xiongxianwei
  * 2018/3/6
  */
 public class Customer {
+
+    //private Desensitization service=Desensitization.getDesensitization(null);
+
     private int customer_id;//客户id
     private String cust_name;//客户名
     private String cust_sex;//性别
@@ -44,39 +51,51 @@ public class Customer {
     public String toString() {
         StringBuffer sb=new StringBuffer();
         sb.append(customer_id+",");
-        sb.append(cust_name+",");
-        sb.append(cust_sex+",");
-        sb.append(cust_age+",");
-        sb.append(cust_birthday+",");
-        sb.append(cust_merry+",");
-        sb.append(cust_id_type+",");
-        sb.append(cust_id_no+",");
-        sb.append(is_manage_owner+",");
-        sb.append(project_code+",");
-        sb.append(special_code+",");
-        sb.append(profession_code+",");
-        sb.append(branch_office+",");
-        sb.append(cust_manager_id+",");
-        sb.append(cust_manager_name+",");
-        sb.append(getCust_manager_grade+",");
-        sb.append(has_children+",");
-        sb.append(census_register+",");
-        sb.append(phone1+",");
-        sb.append(phone2+",");
-        sb.append(pbc_phone+",");
-        sb.append(company_phone1+",");
-        sb.append(company_phone2+",");
-        sb.append(home_phone1+",");
-        sb.append(company_name1+",");
-        sb.append(company_name2+",");
-        sb.append(company_addr1+",");
-        sb.append(company_addr2+",");
-        sb.append(home_addr1+",");
-        sb.append(home_addr2+",");
-        sb.append(created_time+",");
-        sb.append(created_by+",");
-        sb.append(updated_time+",");
-        sb.append(update_by);
+            //sb.append(desensitization.getStrategy("cust_name").removeSensitive(cust_name)+",");
+            sb.append(cust_name+",");
+            sb.append(cust_sex+",");
+            sb.append(cust_age+",");
+            sb.append(cust_birthday+",");
+            sb.append(cust_merry+",");
+            sb.append(cust_id_type+",");
+            //sb.append(desensitization.getStrategy("cust_id_no").removeSensitive(cust_id_no)+",");
+            sb.append(is_manage_owner+",");
+            sb.append(project_code+",");
+            sb.append(special_code+",");
+            sb.append(profession_code+",");
+            sb.append(branch_office+",");
+            sb.append(cust_manager_id+",");
+            sb.append(cust_manager_name+",");
+            sb.append(getCust_manager_grade+",");
+            sb.append(has_children+",");
+            sb.append(census_register+",");
+            sb.append(phone1+",");
+            sb.append(phone2+",");
+            sb.append(pbc_phone+",");
+            sb.append(company_phone1+",");
+            sb.append(company_phone2+",");
+            sb.append(home_phone1+",");
+//            sb.append(desensitization.getStrategy("phone1").removeSensitive(phone1)+",");
+//            sb.append(desensitization.getStrategy("phone2").removeSensitive(phone2)+",");
+//            sb.append(desensitization.getStrategy("pbc_phone").removeSensitive(pbc_phone)+",");
+//            sb.append(desensitization.getStrategy("company_phone1").removeSensitive(company_phone1)+",");
+//            sb.append(desensitization.getStrategy("company_phone2").removeSensitive(company_phone2)+",");
+//            sb.append(desensitization.getStrategy("home_phone1").removeSensitive(home_phone1)+",");
+            sb.append(company_name1+",");
+            sb.append(company_name2+",");
+            sb.append(company_addr1+",");
+            sb.append(company_addr2+",");
+            sb.append(home_addr1+",");
+            sb.append(home_addr2+",");
+//            sb.append(desensitization.getStrategy("company_addr1").removeSensitive(company_addr1)+",");
+//            sb.append(desensitization.getStrategy("company_addr2").removeSensitive(company_addr2)+",");
+//            sb.append(desensitization.getStrategy("home_addr1").removeSensitive(home_addr1)+",");
+//            sb.append(desensitization.getStrategy("home_addr2").removeSensitive(home_addr2)+",");
+            sb.append(created_time+",");
+            sb.append(created_by+",");
+            sb.append(updated_time+",");
+            sb.append(update_by);
+
         return sb.toString();
     }
 

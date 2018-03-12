@@ -4,6 +4,8 @@ import cn.gzcb.export.common.constant.ExportConstant;
 import cn.gzcb.export.dao.ExportDao;
 import cn.gzcb.export.dao.ExportDaoImpl;
 import cn.gzcb.export.model.Customer;
+import cn.gzcb.export.strategypattern.Service;
+import cn.gzcb.export.strategypattern.common.Parameter;
 import cn.gzcb.export.utils.JdbcUtil;
 import org.apache.catalina.core.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +34,11 @@ public class Producer implements Runnable{
     PreparedStatement ps=null;
     ResultSet rs=null;
     private LinkedBlockingQueue queue;
+    private Service service;
 
-
-
-    public Producer(LinkedBlockingQueue queue) {
+    public Producer(LinkedBlockingQueue queue, List<Parameter> parameters) {
         this.queue = queue;
+        service=new Service(parameters);
     }
     @Override
     public void run() {
@@ -53,7 +55,7 @@ public class Producer implements Runnable{
             if(customers!=null){
                 for(int i=0;i<customers.size();i++) {
                     abc++;
-
+                    service.doSomething(customers.get(i));
                     if (!queue.offer(customers.get(i).toString(), 2, TimeUnit.SECONDS)) {
                         System.err.println("放入数据失败：" + customers.get(i).toString());
                     }
@@ -63,7 +65,6 @@ public class Producer implements Runnable{
             }else{
                 System.err.println("生产者获取数据失败！");
             }
-
             long end=System.currentTimeMillis();
             System.err.println("生产者用时："+(end-start)/1000);
         } catch (Exception e) {

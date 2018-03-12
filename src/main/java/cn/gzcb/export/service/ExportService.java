@@ -1,6 +1,7 @@
 package cn.gzcb.export.service;
 
 import cn.gzcb.export.model.Customer;
+import cn.gzcb.export.strategypattern.common.Parameter;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
@@ -33,4 +34,6 @@ public interface ExportService {
     public void insertBatchCustomer() throws SQLException;
 
     public void exportCustomers() throws FileNotFoundException, InterruptedException;
+
+    public void exportCustomers(List<Parameter> parameters) throws FileNotFoundException, InterruptedException;
 }

@@ -1,7 +1,9 @@
 package cn.gzcb.export.service;
 
+import cn.gzcb.export.common.constant.ExportConstant;
 import cn.gzcb.export.dao.ExportDao;
 import cn.gzcb.export.model.Customer;
+import cn.gzcb.export.strategypattern.common.Parameter;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -23,7 +25,6 @@ public class ExportServiceImpl implements ExportService {
     LinkedBlockingQueue<Runnable> threadQueue = new LinkedBlockingQueue<>(10);
 
     ThreadFactory nameThread=new ThreadFactoryBuilder().setNameFormat("pool-%d").build();
-    // 借助Executors
     ExecutorService service = new ThreadPoolExecutor(
             10,
             100,
@@ -59,43 +60,71 @@ public class ExportServiceImpl implements ExportService {
     }
 
     @Override
-    public void exportCustomers()  {
-        long start=System.currentTimeMillis();
-
-        // 声明一个容量为10的缓存队列
+    public void exportCustomers(){
+       /* long start=System.currentTimeMillis();
+        // 声明一个linkedBlockingQueue缓存队列
         LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
-        Producer producer1 = new Producer(queue);
-        Producer producer2 = new Producer(queue);
-       /*
-        Producer producer3 = new Producer(queue);
+       *//*Producer producer3 = new Producer(queue);
+        Producer producer4 = new Producer(queue);
+        Producer producer5 = new Producer(queue);*//*
+        try {
+            for(int i=1;i<= ExportConstant.PRODUCER_THREAD_SIZE;i++){
+                service.execute(new Producer(queue));
+            }
+
+            //睡15秒
+            Thread.sleep(15 * 1000);
+            for(int i=1;i<= ExportConstant.CONSUMER_THREAD_SIZE;i++){
+                service.execute(new Consumer(queue));
+            }
+        //Consumer consumer2 = new Consumer(queue);
+        //Consumer consumer3 = new Consumer(queue);
+        // 启动线程
+        //service.execute(consumer1);
+        //service.execute(consumer2);
+        //service.execute(consumer3);
+
+        service.shutdown();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            if(service.isTerminated()) {
+                long end = System.currentTimeMillis();
+                System.err.println("主线程用时：" + (end - start) / 1000);
+            }
+        }*/
+
+
+    }
+
+    @Override
+    public void exportCustomers(List<Parameter> parameters) throws FileNotFoundException, InterruptedException {
+        long start=System.currentTimeMillis();
+        // 声明一个linkedBlockingQueue缓存队列
+        LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
+       /*Producer producer3 = new Producer(queue);
         Producer producer4 = new Producer(queue);
         Producer producer5 = new Producer(queue);*/
-
-        Consumer consumer1 = null;
         try {
-            consumer1 = new Consumer(queue);
+            for(int i=1;i<= ExportConstant.PRODUCER_THREAD_SIZE;i++){
+                service.execute(new Producer(queue,parameters));
+            }
 
-        Consumer consumer2 = new Consumer(queue);
-        Consumer consumer3 = new Consumer(queue);
+            //睡15秒
+            Thread.sleep(15 * 1000);
+            for(int i=1;i<= ExportConstant.CONSUMER_THREAD_SIZE;i++){
+                service.execute(new Consumer(queue));
+            }
+            //Consumer consumer2 = new Consumer(queue);
+            //Consumer consumer3 = new Consumer(queue);
+            // 启动线程
+            //service.execute(consumer1);
+            //service.execute(consumer2);
+            //service.execute(consumer3);
 
-        // 启动线程
-        service.execute(producer1);
-        service.execute(producer2);
-        /*service.execute(producer3);
-        service.execute(producer4);
-        service.execute(producer5);*/
-
-        Thread.sleep(15 * 1000);
-        service.execute(consumer1);
-        service.execute(consumer2);
-        service.execute(consumer3);
-
-        // 执行10s
-       /*
-        producer1.stop();*/
-        // 退出Executor
-        service.shutdown();
-
+            service.shutdown();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -106,7 +135,6 @@ public class ExportServiceImpl implements ExportService {
                 System.err.println("主线程用时：" + (end - start) / 1000);
             }
         }
-
 
     }
 }

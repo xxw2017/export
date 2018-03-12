@@ -3,17 +3,15 @@ package cn.gzcb.export.controller;
 import cn.gzcb.export.common.constant.ExportConstant;
 import cn.gzcb.export.model.Customer;
 import cn.gzcb.export.service.ExportService;
+import cn.gzcb.export.strategypattern.common.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author xiongxianwei
@@ -52,11 +50,13 @@ public class ExportController {
         return "index";
     }
 
-    @GetMapping(value = "export")
+    @PostMapping(value = "export")
     @ResponseBody
-    public String export() throws FileNotFoundException, InterruptedException {
-        exportService.exportCustomers();
-
+    public String export(@RequestBody List<Parameter> parameters) throws FileNotFoundException, InterruptedException {
+        //Desensitization desen=Desensitization.getDesensitization(parameters);
+        //Service<Customer> service=new Service<>(parameters);
+        exportService.exportCustomers(parameters);
+        //exportService.exportCustomers();
         return "success";
     }
 

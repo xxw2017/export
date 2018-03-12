@@ -36,8 +36,9 @@ public class HiddenSensitive implements Strategy {
         String replace="";
         Map<String,Object> map=command.getMap();
         try{
-            offset=(int)map.get(Constant.OFFSET);
-            cover_length=(int)map.get(Constant.COVER_LENGTH);
+            offset=(Integer)map.get(Constant.OFFSET);
+            cover_length=(Integer) map.get(Constant.COVER_LENGTH);
+
             if (begin_length==0
                     ||offset>(begin_length-1)
                     ||(offset+cover_length)>begin_length
@@ -46,7 +47,8 @@ public class HiddenSensitive implements Strategy {
             }
             replace=map.get(Constant.REPLACE).toString();
         }catch (Exception e){
-            throw new ParametersIllegalException("参数不合法");
+            e.printStackTrace();
+            //throw new ParametersIllegalException("参数不合法");
         }
         //计算需要替换为的字符串长度
         StringBuffer stringBuffer=new StringBuffer(importation.substring(0,offset));

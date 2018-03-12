@@ -60,6 +60,7 @@ public class Service<T> {
                 map.put(Constant.OFFSET,parameter.getOT());
                 map.put(Constant.REPLACE,parameter.getRE());
                 map.put(Constant.STRINGTYPE,parameter.getRT());
+                map.put(Constant.COVER_LENGTH,parameter.getCL());
                 Strategy strategy=null;
                 switch (patternEnum){
                     case Hidden_Characters:strategy=new HiddenSensitive(command);break;
@@ -100,7 +101,6 @@ public class Service<T> {
                         if (value!=null){
                             //设置值
                             field[j].setAccessible(true);
-                            System.out.println((String)field[j].get(model));
                             field[j].set(model,curStrategy.removeSensitive((String)field[j].get(model)));
                         }
                     }
